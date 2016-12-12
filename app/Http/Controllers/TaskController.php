@@ -26,28 +26,28 @@ class TaskController extends Controller
     // Process the added task data
     public function AddTask(Request $request)
     {
-        $categories = Category::get();
             
         $task = new Task;
         $task->title = $request->title;
         $task->description = $request->description;
-       
+        
+        $task->save();
         
         if (!empty($request->category)) {
             $category_id = $request->category;
             $category = Category::where('id', $category_id)->first();
-            $category->task_id = $task->id;
-            $category->save();
+            $task->category_id = $request->category;
+            $task->save();
         }
-        $task->save();
+        
+        return redirect('dashboard')->with('success', 'Task created successfully');
     }
     
     // Show the added task detail
     public function ShowTask($id) 
     {
         $task = Task::where('id', $id)->first();
-        $category = Category::whereNull('task_id')->get();
-        
+        $category = Category::where('id', $task->category_id)->first();
         return view('task', [
             'task' => $task,
             'page' => 'show',
@@ -60,12 +60,7 @@ class TaskController extends Controller
     public function delete(Request $request, $id) 
     {
         $task = Task::where('id', $id)->first();
-        $category = Category::where('task_id', $task->id)->first();
-        
-        $category->task_id = null;
-        $category->save();
-            
         $task->delete();
-        return redirect('dashboard')->with('success', 'Task Deleted');
+        return redirect('dashboard')->with('success', 'Task deleted successfully!');
     }                               
 }

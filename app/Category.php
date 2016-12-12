@@ -10,7 +10,7 @@ class Category extends Model
     
     public function tasks () 
     {
-        return this->hasMany('App\Task','task_id');
+        return $this->hasMany('App\Task');
     }
 }
 

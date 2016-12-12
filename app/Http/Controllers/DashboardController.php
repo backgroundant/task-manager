@@ -17,7 +17,7 @@ class DashboardController extends Controller
         
         return view('dashboard', [
             'tasks' => $tasks,
-            'categories' => categories,
+            'categories' => $categories,
         ]);
     }
 }
